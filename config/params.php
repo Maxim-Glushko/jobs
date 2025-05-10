@@ -1,7 +1,9 @@
 <?php
 
+// create params-local.php file and write in it:
 return [
-    'adminEmail' => 'admin@example.com',
-    'senderEmail' => 'noreply@example.com',
-    'senderName' => 'Example.com mailer',
+    'adminUsername' => 'admin',
+    'adminPasswordHash' => 'changepassword',
+    // создать: \Yii::$app->security->generatePasswordHash('new_password');
+
 ];

@@ -1,14 +1,18 @@
 <?php
 
-/** @var yii\web\View $this */
-/** @var string $content */
-
 use app\assets\AppAsset;
 use app\widgets\Alert;
 use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Html;
 use yii\bootstrap5\Nav;
 use yii\bootstrap5\NavBar;
+use yii\helpers\Url;
+use yii\web\View;
+
+/**
+ * @var View $this
+ * @var string $content
+ */
 
 AppAsset::register($this);
 
@@ -18,9 +22,8 @@ $this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width, 
 $this->registerMetaTag(['name' => 'description', 'content' => $this->params['meta_description'] ?? '']);
 $this->registerMetaTag(['name' => 'keywords', 'content' => $this->params['meta_keywords'] ?? '']);
 $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii::getAlias('@web/favicon.ico')]);
-?>
-<?php $this->beginPage() ?>
-<!DOCTYPE html>
+
+$this->beginPage() ?><!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>" class="h-100">
 <head>
     <title><?= Html::encode($this->title) ?></title>
@@ -38,20 +41,19 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     ]);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav'],
-        'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'About', 'url' => ['/site/about']],
-            ['label' => 'Contact', 'url' => ['/site/contact']],
-            Yii::$app->user->isGuest
-                ? ['label' => 'Login', 'url' => ['/site/login']]
-                : '<li class="nav-item">'
-                    . Html::beginForm(['/site/logout'])
-                    . Html::submitButton(
-                        'Logout (' . Yii::$app->user->identity->username . ')',
-                        ['class' => 'nav-link btn btn-link logout']
-                    )
-                    . Html::endForm()
-                    . '</li>'
+        'items' => Yii::$app->user->isGuest ? [
+            ['label' => 'Login', 'url' => ['/site/login']]
+        ] : [
+            ['label' => 'Люди', 'url' => Url::toRoute('/person')],
+            ['label' => 'Компании', 'url' => Url::toRoute('/company')],
+            ['label' => 'Вакансии', 'url' => Url::toRoute('/vacancy')],
+            ['label' => 'Общение', 'url' => Url::toRoute('/interaction')],
+            ['label' => 'Gii', 'url' => ['/gii']],
+            '<li class="nav-item">'
+                . Html::beginForm(['/site/logout'])
+                . Html::submitButton('Logout', ['class' => 'nav-link btn btn-link logout'])
+                . Html::endForm()
+            . '</li>'
         ]
     ]);
     NavBar::end();
@@ -72,12 +74,10 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     <div class="container">
         <div class="row text-muted">
             <div class="col-md-6 text-center text-md-start">&copy; My Company <?= date('Y') ?></div>
-            <div class="col-md-6 text-center text-md-end"><?= Yii::powered() ?></div>
         </div>
     </div>
 </footer>
 
 <?php $this->endBody() ?>
 </body>
-</html>
-<?php $this->endPage() ?>
+</html><?php $this->endPage();

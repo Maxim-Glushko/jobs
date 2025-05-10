@@ -1,5 +1,6 @@
 <?php
 
+// create db-local.php file and write in it:
 return [
     'class' => 'yii\db\Connection',
     'dsn' => 'mysql:host=localhost;dbname=yii2basic',

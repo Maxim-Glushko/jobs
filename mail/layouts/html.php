@@ -1,5 +1,5 @@
 <?php
-use yii\helpers\Html;
+use app\helpers\Html;
 
 /** @var \yii\web\View $this view component instance */
 /** @var \yii\mail\MessageInterface $message the message being composed */

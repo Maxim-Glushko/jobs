@@ -1,7 +1,14 @@
 <?php
 
-$params = require __DIR__ . '/params.php';
-$db = require __DIR__ . '/db.php';
+$params = yii\helpers\ArrayHelper::merge(
+    require __DIR__ . '/params.php',
+    require __DIR__ . '/params-local.php'
+);
+
+$db = yii\helpers\ArrayHelper::merge(
+    require __DIR__ . '/db.php',
+    require __DIR__ . '/db-local.php'
+);
 
 $config = [
     'id' => 'basic',
@@ -42,14 +49,22 @@ $config = [
             ],
         ],
         'db' => $db,
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                // RESTful resource routing similar to Laravel
+                '<controller:\w+>' => '<controller>/index',
+                '<controller:\w+>/create' => '<controller>/create',
+                '<controller:\w+>/<id:\d+>/edit' => '<controller>/update',
+                '<controller:\w+>/<id:\d+>' => '<controller>/view',
+                '<controller:\w+>/<id:\d+>/delete' => '<controller>/delete',
+
+                // Custom action routing with parameters
+                '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
+                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
             ],
         ],
-        */
     ],
     'params' => $params,
 ];
