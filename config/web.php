@@ -53,6 +53,7 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                '/' => 'company/index',
                 // RESTful resource routing similar to Laravel
                 '<controller:\w+>' => '<controller>/index',
                 '<controller:\w+>/create' => '<controller>/create',

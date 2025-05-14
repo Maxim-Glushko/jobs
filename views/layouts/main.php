@@ -35,7 +35,7 @@ $this->beginPage() ?><!DOCTYPE html>
 <header id="header">
     <?php
     NavBar::begin([
-        'brandLabel' => Yii::$app->name,
+        'brandLabel' => 'My Jobs',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => ['class' => 'navbar-expand-md navbar-dark bg-dark fixed-top']
     ]);
@@ -44,9 +44,9 @@ $this->beginPage() ?><!DOCTYPE html>
         'items' => Yii::$app->user->isGuest ? [
             ['label' => 'Login', 'url' => ['/site/login']]
         ] : [
-            ['label' => 'Люди', 'url' => Url::toRoute('/person')],
             ['label' => 'Компании', 'url' => Url::toRoute('/company')],
             ['label' => 'Вакансии', 'url' => Url::toRoute('/vacancy')],
+            ['label' => 'Люди', 'url' => Url::toRoute('/person')],
             ['label' => 'Общение', 'url' => Url::toRoute('/interaction')],
             ['label' => 'Gii', 'url' => ['/gii']],
             '<li class="nav-item">'
@@ -73,7 +73,7 @@ $this->beginPage() ?><!DOCTYPE html>
 <footer id="footer" class="mt-auto py-3 bg-light">
     <div class="container">
         <div class="row text-muted">
-            <div class="col-md-6 text-center text-md-start">&copy; My Company <?= date('Y') ?></div>
+            <div class="col-md-6 text-center text-md-start">&copy; M. Hlushko <?= date('Y') ?></div>
         </div>
     </div>
 </footer>

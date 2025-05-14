@@ -20,7 +20,7 @@ use yii\db\Expression;
  * @property string $date
  * @property string $created_at
  * @property string $updated_at
- * @property array $person_ids
+ * @property array|string|null $person_ids
  *
  * @property Vacancy $vacancy
  * @property Person[] $persons
@@ -31,7 +31,8 @@ class Interaction extends ActiveRecord
     public ?string $vacancy_title = null;
     public ?string $person_name = null;
 
-    public array $person_ids = [];
+    /** @var array|string|null $person_ids */
+    public $person_ids = [];
 
     /**
      * {@inheritdoc}
@@ -61,6 +62,7 @@ class Interaction extends ActiveRecord
     {
         return [
             [['text', 'result'], 'string'],
+            [['text', 'result'], 'trim'/*, 'chars' => " \t\n\r\0\x0B\xC2\xA0"*/],
             [['vacancy_id'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['date'], 'date', 'format' => 'php:Y-m-d'],
@@ -136,6 +138,6 @@ class Interaction extends ActiveRecord
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
-        $this->updatePersons($this->person_ids);
+        $this->updatePersons(empty($this->person_ids) ? [] : $this->person_ids);
     }
 }

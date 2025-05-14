@@ -26,14 +26,23 @@ class PersonSearch extends Model
 
     public function search($params)
     {
-        $query = Person::find();
+        $query = Person::find()->with(['interactions', 'companies.vacancies.interactions']);
+        $query->joinWith(['interactions'], true, 'Left JOIN');
+        $query->groupBy('persons.id');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'sort' => [
                 'defaultOrder' => [
-                    'name' => SORT_ASC,
-                ]
+                    'latestInteractionDate' => SORT_DESC,
+                ],
+                'attributes' => [
+                    'name',
+                    'latestInteractionDate' => [
+                        'asc' => new Expression('MAX(interactions.date) ASC, MAX(interactions.created_at) ASC'),
+                        'desc' => new Expression('MAX(interactions.date) DESC, MAX(interactions.created_at) DESC')
+                    ]
+    ]
             ],
         ]);
 
@@ -49,14 +58,11 @@ class PersonSearch extends Model
             'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'position', $this->position])
-            ->andFilterWhere(['like', 'comment', $this->comment]);
+        $query->andFilterWhere(['like', 'comment', $this->comment]);
 
-        // Добавляем поиск по JSON-полю contacts
-        if ($this->contacts) {
-            $query->andWhere(new Expression('contacts LIKE :contacts', [
-                ':contacts' => '%' . $this->contacts . '%'
+        if ($this->name) {
+            $query->andWhere(new Expression('persons.contacts LIKE :name OR persons.name LIKE :name OR persons.position LIKE :name', [
+                ':name' => '%' . $this->name . '%'
             ]));
         }
 

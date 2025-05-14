@@ -1,13 +1,16 @@
 <?php
 
-use app\models\Person;
 use app\helpers\Html;
+use app\helpers\Icon;
+use app\models\Person;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 use yii\helpers\Json;
 use yii\web\View;
 use app\models\PersonSearch;
 use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 
 /**
  * @var $this View
@@ -23,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Добавить людя', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Icon::svg('plus'), ['create'], ['class' => 'float-end fs-1']) ?>
     </p>
 
     <?php Pjax::begin(); ?>
@@ -33,29 +36,27 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             //['class' => 'yii\grid\SerialColumn'],
-            'name',
-            'position',
             [
-                'attribute' => 'contacts',
+                'label' => 'Имя/Должность/Контакты',
+                'attribute' => 'name',
                 'format' => 'raw',
-                'enableSorting' => false,
                 'value' => function ($model) {
-                    if (empty($model->contacts)) {
-                        return '';
+                    $html = Html::personLink($model);
+                    if ($model->position) {
+                        $html .= ' - ' . Html::encode($model->position);
                     }
-                    $html = '<ul class="list-unstyled mb-0">';
-                    foreach ($model->contacts as $type => $value) {
-                        $html .= '<li><strong>' . Html::encode($type) . ':</strong> ' . Html::encode($value) . '</li>';
+                    if (!empty($model->contacts)) {
+                        $html .= '<ul class="list-unstyled mb-0">';
+                        foreach ($model->contacts as $type => $value) {
+                            $html .= '<li><strong>' . Html::encode($type) . ':</strong> ' . Html::encode($value) . '</li>';
+                        }
+                        $html .= '</ul>';
                     }
-                    $html .= '</ul>';
                     return $html;
                 },
-                'filter' => Html::activeTextInput($searchModel, 'contacts', [
-                    'class' => 'form-control'
-                ]),
             ],
             [
-                'label' => 'Компании: Вакансии',
+                'label' => 'Компании/Вакансии',
                 'format' => 'raw',
                 //'enableSorting' => false,
                 'value' => function ($model) {
@@ -78,12 +79,36 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $html;
                 }
             ],
+            [
+                'label' => 'Общение',
+                'attribute' => 'latestInteractionDate',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    $html = '';
+                    if ($model->interactions) {
+                        $interactions = $model->interactions;
+                        ArrayHelper::multisort($interactions, 'date', SORT_DESC);
+                        foreach ($interactions as $interaction) {
+                            if ($interaction->vacancy && in_array($interaction->vacancy->company_id, ArrayHelper::getColumn($model->companies, 'id'))) {
+                                $html .= '<a href="' . Url::toRoute(['/interaction/view', 'id' => $interaction->id]) . '">'
+                                    . '#' . $interaction->id . ' - ' . Yii::$app->formatter->asDate($interaction->date, 'php:d M Y')
+                                    . '</a>';
+                                if ($interaction->result) {
+                                    $html .= ':<br />' . Html::encode($interaction->result);
+                                }
+                                $html .= '<br />';
+                            }
+                        }
+                    }
+                    return $html;
+                }
+            ],
             'comment',
             //'created_at:datetime',
             //'updated_at:datetime',
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{view} {update} {delete}',
+                'template' => '{update} {delete}',
             ],
         ],
     ]); ?>

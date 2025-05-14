@@ -25,7 +25,7 @@ class m250508_172626_create_companies_table extends Migration
         $this->createIndex(
             '{{%idx-companies-name}}',
             '{{%companies}}',
-            'name'
+            'name(15)'
         );
     }
 

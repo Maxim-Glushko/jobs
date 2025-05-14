@@ -74,6 +74,10 @@ class VacancyController extends BaseController
             }
         }
 
+        if (Yii::$app->request->get() && $model->isNewRecord) {
+            $model->company_id = Yii::$app->request->get('company_id');
+        }
+
         return $this->render('create', [
             'model' => $model,
         ]);

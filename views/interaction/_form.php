@@ -32,20 +32,28 @@ $this->registerJs("
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'vacancy_id')->dropDownList(Vacancy::forSelect(), [
-        'prompt' => 'Выберите вакансию',
-        'class' => 'form-select',
-        'id' => 'vacancy-id',
-    ]) ?>
+    <div style="display:flex;gap:1rem">
+        <?= $form->field($model, 'vacancy_id', ['options' => ['style' => 'flex:6']])->dropDownList(Vacancy::forSelect(), [
+            'prompt' => 'Выберите вакансию',
+            'class' => 'form-select',
+            'id' => 'vacancy-id',
+        ]) ?>
 
-    <?= $form->field($model, 'person_ids')->dropDownList(Person::forSelect(), [
-        'id' => 'person-ids',
-        'multiple' => true,
-        'class' => 'form-select',
-        'value' => Yii::$app->request->isPost
-            ? $model->person_ids
-            : (empty($model->person_ids) ? $model->getPersons()->select('id')->column() : $model->person_ids),
-    ])->label('Люди') ?>
+        <?= $form->field($model, 'person_ids', ['options' => ['style' => 'flex:6']])->dropDownList(Person::forSelect(), [
+            'id' => 'person-ids',
+            'multiple' => true,
+            'class' => 'form-select',
+            'value' => Yii::$app->request->isPost
+                ? $model->person_ids
+                : (empty($model->person_ids) ? $model->getPersons()->select('id')->column() : $model->person_ids),
+        ])->label('Люди') ?>
+
+        <?= $form->field($model, 'date', ['options' => ['style' => 'flex:2']])->textInput([
+             'type' => 'date',
+            'value' => ($model->isNewRecord && empty($model->date)) ? date('Y-m-d') : $model->date,
+            'class' => 'form-control form-control-lg'
+        ]) ?>
+    </div>
 
     <?php
     $js = <<<JS
@@ -67,10 +75,8 @@ $this->registerJs("
 
     <?= $form->field($model, 'result')->textarea(['rows' => 3]) ?>
 
-    <?= $form->field($model, 'date')->textInput(['type' => 'date']) ?>
-
     <div class="form-group">
-        <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Сохранить', ['class' => 'btn btn-secondary w-100 btn-lg']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

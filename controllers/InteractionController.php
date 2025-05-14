@@ -49,6 +49,11 @@ class InteractionController extends BaseController
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
+        if (Yii::$app->request->get() && $model->isNewRecord) {
+            $model->vacancy_id = Yii::$app->request->get('vacancy_id');
+            $model->person_ids = Yii::$app->request->get('person_ids');
+        }
+
         return $this->render('create', [
             'model' => $model,
         ]);

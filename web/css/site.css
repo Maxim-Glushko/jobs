@@ -86,3 +86,14 @@ a.desc:after {
 .form-group {
     margin-bottom: 1rem;
 }
+
+svg.icon {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.125em;
+    fill: currentColor;
+}
+svg.icon path {
+    fill: currentColor;
+}

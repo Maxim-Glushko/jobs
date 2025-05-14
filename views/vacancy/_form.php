@@ -26,21 +26,27 @@ $this->registerJs("
 <div class="vacancy-form">
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
+    <div style="display:flex;gap:1rem">
+        <?= $form->field($model, 'title', ['options' => ['style' => 'flex:1']])
+            ->textInput(['maxlength' => true, 'class' => 'form-control form-control-lg']) ?>
+
+        <?= $form->field($model, 'company_id', ['options' => ['style' => 'flex:1']])->dropDownList(Company::forSelect(), [
+            'prompt' => 'Выберите компанию',
+            'class' => 'form-select',
+            'id' => 'company-id',
+        ]) ?>
+    </div>
+
     <?= $form->field($model, 'text')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'company_id')->dropDownList(Company::forSelect(), [
-        'prompt' => 'Выберите компанию',
-        'class' => 'form-select',
-        'id' => 'company-id',
-    ]) ?>
+    <div style="display:flex;gap:1rem">
+        <?= $this->render('@app/views/shared/_contactsField', ['form' => $form, 'model' => $model]) ?>
 
-    <?= $this->render('@app/views/shared/_contactsField', ['form' => $form, 'model' => $model]) ?>
-
-    <?= $form->field($model, 'comment')->textarea(['rows' => 6]) ?>
+        <?= $form->field($model, 'comment', ['options' => ['style' => 'flex:1']])->textarea(['rows' => 6]) ?>
+    </div>
 
     <div class="form-group">
-        <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Сохранить', ['class' => 'btn btn-secondary w-100 btn-lg']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

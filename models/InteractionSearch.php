@@ -4,6 +4,7 @@ namespace app\models;
 
 use yii\data\ActiveDataProvider;
 use yii\base\Model;
+use yii\db\Expression;
 
 class InteractionSearch extends Interaction
 {
@@ -58,9 +59,9 @@ class InteractionSearch extends Interaction
                         'desc' => ['vacancies.title' => SORT_DESC],
                     ],
                     'date' => [
-                        'asc' => ['interactions.date' => SORT_ASC],
-                        'desc' => ['interactions.date' => SORT_DESC],
-                    ],
+                        'asc' => new Expression('interactions.date ASC, interactions.updated_at ASC'),
+                        'desc' => new Expression('interactions.date DESC, interactions.updated_at DESC'),
+                    ]
                 ],
                 'defaultOrder' => [
                     'date' => SORT_DESC,
@@ -71,7 +72,6 @@ class InteractionSearch extends Interaction
         $this->load($params);
 
         if (!$this->validate()) {
-            //var_dump($this->getErrors());exit();
             return $dataProvider;
         }
 
@@ -80,8 +80,8 @@ class InteractionSearch extends Interaction
             'vacancy_id' => $this->vacancy_id,
         ]);
 
-        $query->andFilterWhere(['like', 'text', $this->text])
-            ->andFilterWhere(['like', 'result', $this->result]);
+        $query->andFilterWhere(['like', 'interactions.text', $this->text])
+            ->andFilterWhere(['like', 'interactions.result', $this->result]);
 
         if (!empty($this->company_name)) {
             $query->andFilterWhere(['like', 'companies.name', $this->company_name]);

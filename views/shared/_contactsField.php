@@ -14,7 +14,8 @@ use app\models\Vacancy;
 
 <?= $form->field($model, 'contacts', [
     'enableClientValidation' => true,
-    'enableAjaxValidation' => false
+    'enableAjaxValidation' => false,
+    'options' => ['style' => 'flex:1']
 ])->textarea([
     'rows' => 6,
     'class' => 'form-control json-validator',

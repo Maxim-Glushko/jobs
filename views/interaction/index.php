@@ -1,11 +1,12 @@
 <?php
 
+use app\helpers\Html;
+use app\helpers\Icon;
 use app\models\Interaction;
 use app\models\InteractionSearch;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\grid\ActionColumn;
-use app\helpers\Html;
 use yii\web\View;
 use yii\helpers\Url;
 
@@ -23,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Создать взаимодействие', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Icon::svg('plus'), ['create'], ['class' => 'float-end fs-1']) ?>
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>

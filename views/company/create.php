@@ -9,7 +9,7 @@ use app\models\Company;
  * @var Company $model
  */
 
-$this->title = 'Создать компанию';
+$this->title = 'Добавить компанию';
 $this->params['breadcrumbs'][] = ['label' => 'Компании', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

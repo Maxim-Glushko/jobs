@@ -15,45 +15,37 @@ $this->registerJsFile('@web/js/choices.min.js', ['depends' => [JqueryAsset::clas
 ?>
 
 <div class="person-form">
-    <?php $form = ActiveForm::begin([
-        'id' => 'person-form',
-        'layout' => 'horizontal',
-        'fieldConfig' => [
-            'template' => "{label}\n{input}\n{error}",
-            'labelOptions' => ['class' => 'col-sm-2 col-form-label'],
-            'inputOptions' => ['class' => 'col-sm-6 form-control'],
-            'errorOptions' => ['class' => 'col-sm-4 invalid-feedback'],
-        ],
-        'options' => [
-            'enctype' => 'multipart/form-data',
-            'class' => 'mt-3'
-        ],
-    ]); ?>
+    <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'name')->textInput([
-        'maxlength' => true,
-    ]) ?>
+    <div style="display:flex;gap:1rem;">
+        <?= $form->field($model, 'name', ['options' => ['style' => 'flex:5']])->textInput([
+            'maxlength' => true,
+            'class' => 'form-control form-control-lg'
+        ]) ?>
 
-    <?= $form->field($model, 'position')->textInput([
-        'maxlength' => true,
-        'placeholder' => ''
-    ]) ?>
+        <?= $form->field($model, 'position', ['options' => ['style' => 'flex:3']])->textInput([
+            'maxlength' => true,
+            'placeholder' => '',
+            'class' => 'form-control form-control-lg'
+        ]) ?>
 
-    <?= $this->render('@app/views/shared/_contactsField', ['form' => $form, 'model' => $model]) ?>
+        <?= $form->field($model, 'company_ids', ['options' => ['style' => 'flex:5']])->dropDownList(Company::forSelect(), [
+            'id' => 'company-ids',
+            'multiple' => true,
+            'class' => 'form-select',
+            'value' => Yii::$app->request->isPost
+                ? $model->company_ids
+                : (empty($model->company_ids) ? $model->getCompanies()->select('id')->column() : $model->company_ids)
+        ]) ?>
+    </div>
 
-    <?= $form->field($model, 'comment')->textarea([
-        'rows' => 4,
-        'placeholder' => 'Дополнительная информация'
-    ]) ?>
+    <div style="display:flex; gap:1rem;">
+        <?= $this->render('@app/views/shared/_contactsField', ['form' => $form, 'model' => $model]) ?>
 
-    <?= $form->field($model, 'company_ids')->dropDownList(Company::forSelect(), [
-        'id' => 'company-ids',
-        'multiple' => true,
-        'class' => 'form-select',
-        'value' => Yii::$app->request->isPost
-            ? $model->company_ids
-            : (empty($model->company_ids) ? $model->getCompanies()->select('id')->column() : $model->company_ids),
-    ]) ?>
+        <?= $form->field($model, 'comment', ['options' => ['style' => 'flex:1']])->textarea([
+            'rows' => 6
+        ]) ?>
+    </div>
 
     <?php
     $js = <<<JS
@@ -71,15 +63,7 @@ $this->registerJsFile('@web/js/choices.min.js', ['depends' => [JqueryAsset::clas
     $this->registerJs($js);
     ?>
 
-    <div class="form-group row">
-        <div class="offset-sm-2 col-sm-10">
-            <?= Html::submitButton(
-                $model->isNewRecord ? 'Создать' : 'Обновить',
-                ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']
-            ) ?>
-            <?= Html::a('Отмена', ['index'], ['class' => 'btn btn-secondary ms-2']) ?>
-        </div>
-    </div>
+    <?= Html::submitButton('Сохранить', ['class' => 'btn btn-secondary w-100 btn-lg']) ?>
 
     <?php ActiveForm::end(); ?>
 </div>

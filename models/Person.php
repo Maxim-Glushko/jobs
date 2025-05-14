@@ -22,7 +22,7 @@ use yii\base\InvalidConfigException;
  * @property string|null $comment
  * @property string $created_at
  * @property string $updated_at
- * @property array $company_ids
+ * @property array|string|null $company_ids
  *
  * @property Company[] $companies
  * @property Interaction[] $interactions
@@ -31,7 +31,8 @@ class Person extends ActiveRecord
 {
     use JsonValidator;
 
-    public array $company_ids = [];
+    /** @var array|string|null $company_ids */
+    public $company_ids = [];
     /**
      * {@inheritdoc}
      */
@@ -74,6 +75,7 @@ class Person extends ActiveRecord
         return [
             [['name'], 'required'],
             [['name', 'position', 'comment'], 'string'],
+            [['name', 'position', 'comment'], 'trim'],
             ['contacts', 'validateJson'],
             ['company_ids', 'each', 'rule' => ['exist', 'skipOnError' => true, 'targetClass' => Company::class, 'targetAttribute' => 'id']]
         ];
@@ -148,7 +150,7 @@ class Person extends ActiveRecord
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
-        $this->updateCompanies($this->company_ids);
+        $this->updateCompanies(empty($this->company_ids) ? [] : $this->company_ids);
     }
 
     public static function forSelect(): array

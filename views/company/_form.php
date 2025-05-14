@@ -19,12 +19,14 @@ use app\models\Company;
 
     <?= $form->field($model, 'name')->textInput() ?>
 
-    <?= $this->render('@app/views/shared/_contactsField', ['form' => $form, 'model' => $model]) ?>
+    <div style="display:flex;gap:1rem">
+        <?= $this->render('@app/views/shared/_contactsField', ['form' => $form, 'model' => $model]) ?>
 
-    <?= $form->field($model, 'comment')->textarea(['rows' => 6]) ?>
+        <?= $form->field($model, 'comment', ['options' => ['style' => 'flex:1']])->textarea(['rows' => 6]) ?>
+    </div>
 
     <div class="form-group">
-        <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Сохранить', ['class' => 'btn btn-secondary w-100 btn-lg']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

@@ -76,6 +76,7 @@ class Vacancy extends ActiveRecord
         return [
             [['title'], 'required'],
             [['title', 'text', 'comment', 'company_name'], 'string'],
+            [['title', 'text', 'comment', 'company_name'], 'trim'],
             [['company_id'], 'integer'],
             ['contacts', 'validateJson'],
             [['created_at', 'updated_at'], 'safe'],

@@ -11,15 +11,13 @@ use yii\helpers\Url;
  * @var Interaction $model
  */
 
-$this->title = '#' . $model->id . ' - ' . Yii::$app->formatter->asDate($model->date, 'php:d M Y') . ' - ' . $model->vacancy->title . ' (' . $model->vacancy->company->name . ')';
+$this->title = '#' . $model->id . ' - ' . Yii::$app->formatter->asDate($model->date, 'php:d M Y');
 $this->params['breadcrumbs'][] = ['label' => 'Общение', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="interaction-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
+    <p class="float-end">
         <?= Html::a('Изменить', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Удалить', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
@@ -29,6 +27,8 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]) ?>
     </p>
+
+    <h1><?= Html::encode($this->title) ?></h1>
 
     <?= DetailView::widget([
         'model' => $model,
@@ -54,7 +54,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             [
-                'label' => 'Сотрудники',
+                'label' => 'Люди на встрече',
                 'format' => 'raw',
                 'value' => function ($model) {
                     return implode('<br>', array_map(function ($person) {

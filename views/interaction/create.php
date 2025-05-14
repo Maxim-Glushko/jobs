@@ -11,7 +11,7 @@ use app\models\Vacancy;
  * @var Vacancy $vacancy
  */
 
-$this->title = 'Создать взаимодействие';
+$this->title = 'Добавить взаимодействие';
 $this->params['breadcrumbs'][] = ['label' => 'Общение', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

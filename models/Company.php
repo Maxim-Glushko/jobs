@@ -63,6 +63,7 @@ class Company extends ActiveRecord
     {
         return [
             [['name'], 'required'],
+            [['name', 'comment'], 'trim'],
             [['name', 'comment'], 'string'],
             ['contacts', 'validateJson'],
         ];

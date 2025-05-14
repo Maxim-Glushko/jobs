@@ -1,10 +1,13 @@
 <?php
 
 use app\helpers\Html;
+use app\helpers\Icon;
 use yii\widgets\DetailView;
 use yii\web\View;
 use app\models\Company;
 use yii\helpers\Url;
+use yii\web\YiiAsset;
+use yii\helpers\ArrayHelper;
 
 /**
  * @var View $this
@@ -14,14 +17,12 @@ use yii\helpers\Url;
 $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Компании', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-\yii\web\YiiAsset::register($this);
+YiiAsset::register($this);
 ?>
 <div class="company-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Список', ['index'], ['class' => 'btn btn-primary']) ?>
+    <p class="float-end">
+        <?php /*= Html::a('Список', ['index'], ['class' => 'btn btn-primary']) */ ?>
         <?= Html::a('Изменить', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Удалить', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
@@ -31,6 +32,8 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]) ?>
     </p>
+
+    <h1><?= Html::encode($this->title) ?></h1>
 
     <?= DetailView::widget([
         'model' => $model,
@@ -56,7 +59,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Вакансии',
                 'format' => 'raw',
                 'value' => function ($model) {
-                    $html = '';
+                    $html = Html::createVacancyLink($model->id);
                     if ($model->vacancies) {
                         foreach ($model->vacancies as $vacancy) {
                             $html .= Html::vacancyLink($vacancy) . '<br />';
@@ -69,11 +72,40 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Люди',
                 'format' => 'raw',
                 'value' => function ($model) {
-                    $html = '';
+                    $html = Html::createPersonLink($model->id);;
                     if ($model->persons) {
                         foreach ($model->persons as $person) {
                             $html .= Html::personLink($person) . '<br />';
                         }
+                    }
+                    return $html;
+                }
+            ],
+            [
+                'label' => 'Общение',
+                'format' => 'raw',
+                'attribute' => 'latestInteractionDate',
+                'value' => function ($model) {
+                    $person_ids = $model->persons ? array_column($model->persons, 'id') : [];
+                    $html = '';
+                    if ($model->vacancies) {
+                        foreach ($model->vacancies as $vacancy) {
+                            $html .= Html::createInteractionLink($vacancy->id, $person_ids);
+                            if ($vacancy->interactions) {
+                                $interactions = $vacancy->interactions;
+                                ArrayHelper::multisort($interactions, ['date', 'created_at'], [SORT_DESC, SORT_DESC]);
+                                foreach ($interactions as $interaction) {
+                                    $html .= Html::a(Yii::$app->formatter->asDate($interaction->date, 'php:d M Y'),
+                                        Url::toRoute(['/interaction/view', 'id' => $interaction->id]));
+                                    if ($interaction->result) {
+                                        $html .= ': ' . Html::encode($interaction->result);
+                                    }
+                                    $html .= '<br />';
+                                }
+                            }
+                        }
+                    } else {
+                        // $html .= Html::createInteractionLink(0, $person_ids);
                     }
                     return $html;
                 }

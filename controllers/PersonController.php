@@ -71,6 +71,10 @@ class PersonController extends BaseController
             }
         }
 
+        if (Yii::$app->request->get() && $model->isNewRecord) {
+            $model->company_ids = Yii::$app->request->get('company_ids');
+        }
+
         return $this->render('create', [
             'model' => $model,
         ]);

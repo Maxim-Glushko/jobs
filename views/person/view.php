@@ -4,6 +4,7 @@ use yii\widgets\DetailView;
 use yii\helpers\Url;
 use yii\web\View;
 use app\models\Person;
+use yii\helpers\ArrayHelper;
 
 /**
  * @var $this View
@@ -17,9 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="person-view">
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
+    <p class="float-end">
         <?= Html::a('Изменить', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Удалить', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
@@ -28,8 +27,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'method' => 'post',
             ],
         ]) ?>
-        <?= Html::a('К списку', ['index'], ['class' => 'btn btn-secondary']) ?>
     </p>
+
+    <h1><?= Html::encode($this->title) ?></h1>
 
     <?= DetailView::widget([
         'model' => $model,
@@ -74,13 +74,18 @@ $this->params['breadcrumbs'][] = $this->title;
                         return '';
                     }
                     $html = '';
-                    foreach ($model->interactions as $interaction) {
-                        $html .= '<a href="' . Url::to(['/interaction','id' => $interaction->id]) . '">#' . Html::encode($interaction->id) . ' / ' . Yii::$app->formatter->asDate($interaction->date, 'php:d M Y') . '</a> ';
+                    $interactions = $model->interactions;
+                    ArrayHelper::multisort($interactions, 'date', SORT_DESC);
+                    foreach ($interactions as $interaction) {
+                        $block = '<a href="' . Url::toRoute(['/interaction/view','id' => $interaction->id]) . '">'
+                            . Yii::$app->formatter->asDate($interaction->date, 'php:d M Y') . '</a> '
+                            . Html::encode($interaction->result);
                         if ($interaction->vacancy) {
-                            $html .= ' <- ' . Html::vacancyLink($interaction->vacancy);
+                            $block = Html::vacancyLink($interaction->vacancy) . ' ⇋ ' . $block;
                             if ($interaction->vacancy->company) {
-                                $html .= ' <- ' . Html::companyLink($interaction->vacancy->company);
+                                $block = Html::companyLink($interaction->vacancy->company) . ' ⇋ ' . $block;
                             }
+                            $html .= $block;
                         }
                         $html .= '<br />';
                     }

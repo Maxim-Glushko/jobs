@@ -51,12 +51,27 @@ class VacancySearch extends Vacancy
      */
     public function search(array $params): ActiveDataProvider
     {
-        $query = Vacancy::find();
+        $query = Vacancy::find()->with(['company.persons', 'interactions.persons']); // по кругу, шо капец, но по-иному никак
         $query->joinWith(['company'], true, 'LEFT JOIN');
+        $query->joinWith(['interactions'], true, 'LEFT JOIN');
         $query->select(['vacancies.*', 'companies.name as company_name']);
+        $query->groupBy('vacancies.id');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort' => [
+                'defaultOrder' => [
+                    'latestInteractionDate' => SORT_DESC,
+                ],
+                'attributes' => [
+                    'title',
+                    'comment',
+                    'latestInteractionDate' => [
+                        'asc' => new Expression('MAX(interactions.date) ASC, MAX(interactions.created_at) ASC'),
+                        'desc' => new Expression('MAX(interactions.date) DESC, MAX(interactions.created_at) DESC'),
+                    ]
+                ]
+            ],
         ]);
 
         $this->load($params);
@@ -71,14 +86,12 @@ class VacancySearch extends Vacancy
             'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['like', 'title', $this->title])
-            ->andFilterWhere(['like', 'text', $this->text])
+        $query->andFilterWhere(['like', 'text', $this->text])
             ->andFilterWhere(['like', 'comment', $this->comment]);
 
-
-        if ($this->contacts) {
-            $query->andWhere(new Expression('contacts LIKE :contacts', [
-                ':contacts' => '%' . $this->contacts . '%'
+        if ($this->title) {
+            $query->andWhere(new Expression('vacancies.contacts LIKE :title OR vacancies.title LIKE :title', [
+                ':title' => '%' . $this->title . '%'
             ]));
         }
 
