@@ -17,12 +17,22 @@ use app\models\Company;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'name')->textInput() ?>
-
     <div style="display:flex;gap:1rem">
-        <?= $this->render('@app/views/shared/_contactsField', ['form' => $form, 'model' => $model]) ?>
+        <?= $form->field($model, 'status', ['options' => ['style' => 'flex:1']])->dropDownList(Company::$statuses, [
+            'class' => 'form-select',
+            'id' => 'status-id',
+            'encode' => false
+        ]) ?>
 
-        <?= $form->field($model, 'comment', ['options' => ['style' => 'flex:1']])->textarea(['rows' => 6]) ?>
+        <?= $form->field($model, 'name', ['options' => ['style' => 'flex:17']])->textInput() ?>
+    </div>
+
+    <div style="display:flex;gap:1rem;padding:16px 0;">
+        <?= $form->field($model, 'comment', ['options' => ['style' => 'flex:3']])->textarea(['rows' => 6]) ?>
+
+        <div style="flex:2; padding-top:24px;">
+            <?= $this->render('@app/views/shared/_contactsField', ['form' => $form, 'model' => $model]) ?>
+        </div>
     </div>
 
     <div class="form-group">

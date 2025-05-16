@@ -52,4 +52,27 @@ class Html extends \yii\bootstrap5\Html
             'target' => '_blank'
         ]);
     }
+
+    /**
+     * @param Company|Vacancy|Person $model
+     * @return string
+     */
+    public static function contactsList(ActiveRecord $model): string
+    {
+        $html = '';
+        if (!empty($model->contacts)) {
+            $html .= '<ul class="list-unstyled mb-0">';
+            foreach ($model->contacts as $type => $value) {
+                if (is_array($value)) {
+                    foreach ($value as $v) {
+                        $html .= '<li><strong>' . Html::encode($type) . ':</strong> ' . Html::encode($v) . '</li>';
+                    }
+                } else {
+                    $html .= '<li><strong>' . Html::encode($type) . ':</strong> ' . Html::encode($value) . '</li>';
+                }
+            }
+            $html .= '</ul>';
+        }
+        return $html;
+    }
 }

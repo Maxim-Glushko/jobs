@@ -39,20 +39,19 @@ YiiAsset::register($this);
         'model' => $model,
         'attributes' => [
             //'id',
-            'name',
+            [
+                'attribute' => 'name',
+                'label' => 'Название',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    return Company::$statuses[$model->status] . ' ' . Html::encode($model->name);
+                },
+            ],
             [
                 'attribute' => 'contacts',
                 'format' => 'raw',
                 'value' => function($model) {
-                    if (empty($model->contacts)) {
-                        return '';
-                    }
-                    $html = '<ul class="list-unstyled mb-0">';
-                    foreach ($model->contacts as $type => $value) {
-                        $html .= '<li><strong>' . Html::encode($type) . ':</strong> ' . Html::encode($value) . '</li>';
-                    }
-                    $html .= '</ul>';
-                    return $html;
+                    return Html::contactsList($model);
                 },
             ],
             [

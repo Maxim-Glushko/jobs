@@ -9,6 +9,7 @@ use yii\helpers\Json;
 use yii\web\View;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
+use yii\web\JqueryAsset;
 
 /**
  * @var View $this
@@ -19,36 +20,31 @@ use yii\helpers\ArrayHelper;
 $this->title = 'Вакансии';
 $this->params['breadcrumbs'][] = $this->title;
 
-$this->registerJs("
-    $(document).on('click', '.toggle-link', function (e) {
-    e.preventDefault();
-
-    const \$container = \$(this).closest('.text-toggle');
-    const \$short = \$container.find('.short-text');
-    const \$full = \$container.find('.full-text');
-
-    if (\$full.hasClass('d-none')) {
-        \$short.hide();
-        \$full.removeClass('d-none');
-        \$(this).text('скрыть');
-    } else {
-        \$full.addClass('d-none');
-        \$short.show();
-        \$(this).text('далее');
-    }
-});
-");
+$this->registerJsFile('@web/js/vacancy-index.js', ['depends' => [JqueryAsset::class]]);
 ?>
-<div class="vacancy-index">
-    <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a(Icon::svg('plus'), ['create'], ['class' => 'float-end fs-1']) ?>
-    </p>
+<div class="vacancy-index">
+
+    <h1><?= Html::encode($this->title) ?></h1>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'pager' => [
+            'maxButtonCount' => 5,
+            'options' => ['class' => 'pagination justify-content-center'],
+            'linkContainerOptions' => ['class' => 'page-item'],
+            'linkOptions' => ['class' => 'page-link'],
+            'disabledListItemSubTagOptions' => ['class' => 'page-link'],
+            'class' => 'yii\widgets\LinkPager',
+        ],
+        'layout' => '<div class="d-flex justify-content-between align-items-center mb-3">
+                <div>{summary}</div>
+                <div>{pager}</div>   
+                <div>' . Html::a(Icon::svg('plus'), ['create'], ['class' => 'float-end fs-1']) . '</div>
+            </div>
+            {items}
+            <div class="d-flex justify-content-center mt-3">{pager}</div>',
         'columns' => [
             //'id',
             [
@@ -56,15 +52,8 @@ $this->registerJs("
                 'label' => 'Заголовок/Контакты',
                 'format' => 'raw',
                 'value' => function($model) {
-                    $html = Html::a(Html::encode($model->title), Url::toRoute(['vacancy/view', 'id' => $model->id]));
-                    if (!empty($model->contacts)) {
-                        $html .= '<ul class="list-unstyled mb-0">';
-                        foreach ($model->contacts as $type => $value) {
-                            $html .= '<li><strong>' . Html::encode($type) . ':</strong> ' . Html::encode($value) . '</li>';
-                        }
-                        $html .= '</ul>';
-                    }
-                    return $html;
+                    return Html::a(Html::encode($model->title), Url::toRoute(['vacancy/view', 'id' => $model->id]))
+                        . Html::contactsList($model);
                 }
             ],
             [

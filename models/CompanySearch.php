@@ -12,6 +12,7 @@ class CompanySearch extends Model
     public $name;
     public $contacts;
     public $comment;
+    public $status;
     public $created_at;
     public $updated_at;
 
@@ -19,7 +20,7 @@ class CompanySearch extends Model
     {
         return [
             [['id'], 'integer'],
-            [['name', 'contacts', 'comment', 'created_at', 'updated_at'], 'safe'],
+            [['name', 'contacts', 'comment', 'status', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -56,6 +57,12 @@ class CompanySearch extends Model
             //'created_at' => $this->created_at,
             //'updated_at' => $this->updated_at,
         ]);
+
+        if (!empty($this->status)) { // 0 - показывать все
+            $query->andFilterWhere([
+                'status' => $this->status,
+            ]);
+        }
 
         /*$query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'companies.comment', $this->comment]);*/

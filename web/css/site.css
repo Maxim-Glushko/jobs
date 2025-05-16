@@ -97,3 +97,7 @@ svg.icon {
 svg.icon path {
     fill: currentColor;
 }
+
+.contact-label {
+    width: 5.5rem;
+}

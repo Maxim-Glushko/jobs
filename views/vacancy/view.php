@@ -49,15 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'enableSorting' => false,
                 'value' => function ($model) {
-                    if (empty($model->contacts)) {
-                        return '';
-                    }
-                    $html = '<ul class="list-unstyled mb-0">';
-                    foreach ($model->contacts as $type => $value) {
-                        $html .= '<li><strong>' . Html::encode($type) . ':</strong> ' . Html::encode($value) . '</li>';
-                    }
-                    $html .= '</ul>';
-                    return $html;
+                    return Html::contactsList($model);
                 },
             ],
             [

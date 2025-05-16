@@ -4,23 +4,13 @@ use app\helpers\Html;
 use app\models\Vacancy;
 use app\models\Company;
 use yii\helpers\Json;
-use yii\web\JqueryAsset;
-
-$this->registerCssFile('@web/css/choices.min.css');
-$this->registerJsFile('@web/js/choices.min.js', ['depends' => [JqueryAsset::class]]);
-
-$this->registerJs("
-    var element = document.getElementById('company-id');
-    var choices = new Choices(element, {
-        searchEnabled: true,
-        removeItemButton: true,
-        placeholderValue: 'Выберите компанию'
-    });
-");
+use app\assets\ChoicesAsset;
 
 /**
  * @var Vacancy $model
  */
+
+$this->registerJsFile('@web/js/vacancy-form.js', ['depends' => [ChoicesAsset::class]]);
 ?>
 
 <div class="vacancy-form">
@@ -39,10 +29,12 @@ $this->registerJs("
 
     <?= $form->field($model, 'text')->textarea(['rows' => 6]) ?>
 
-    <div style="display:flex;gap:1rem">
-        <?= $this->render('@app/views/shared/_contactsField', ['form' => $form, 'model' => $model]) ?>
+    <div style="display:flex;gap:1rem;padding:16px 0;">
+        <?= $form->field($model, 'comment', ['options' => ['style' => 'flex:3']])->textarea(['rows' => 6]) ?>
 
-        <?= $form->field($model, 'comment', ['options' => ['style' => 'flex:1']])->textarea(['rows' => 6]) ?>
+        <div style="flex:2; padding-top:31px;">
+            <?= $this->render('@app/views/shared/_contactsField', ['form' => $form, 'model' => $model]) ?>
+        </div>
     </div>
 
     <div class="form-group">

@@ -20,6 +20,7 @@ use yii\db\ActiveQuery;
  * @property string $name Название компании
  * @property array $contacts Контактные данные в JSON формате
  * @property string $comment Комментарий
+ * @property int $status
  * @property string $created_at Дата создания записи
  * @property string $updated_at Дата последнего обновления
  *
@@ -59,12 +60,22 @@ class Company extends ActiveRecord
         ];
     }
 
+    public static array $statuses = [
+        0 => '',
+        1 => '<span title="внимание">🔔</span>',// ❗ 🔔 📢
+        2 => '<span title="ожидание">⏳</span>',
+        3 => '<span title="отказ">🚫</span>',
+        4 => '<span title="я отказал">🚩</span>',
+        5 => '<span title="работал там">🤝</span>',
+    ];
+
     public function rules(): array
     {
         return [
             [['name'], 'required'],
             [['name', 'comment'], 'trim'],
             [['name', 'comment'], 'string'],
+            ['status', 'in', 'range' => array_keys(static::$statuses)],
             ['contacts', 'validateJson'],
         ];
     }
@@ -76,6 +87,7 @@ class Company extends ActiveRecord
             'name' => 'Название',
             'contacts' => 'Контакты',
             'comment' => 'Комментарий',
+            'status' => 'Статус',
             'created_at' => 'Дата создания',
             'updated_at' => 'Дата обновления',
         ];

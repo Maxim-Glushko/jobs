@@ -2,12 +2,12 @@
 
 use app\helpers\Html;
 use yii\bootstrap5\ActiveForm;
-use app\models\Company;
 use app\models\Person;
 use app\models\Interaction;
 use app\models\Vacancy;
 use yii\web\View;
-use yii\web\JqueryAsset;
+use app\assets\ChoicesAsset;
+use yii\helpers\ArrayHelper;
 
 /**
  * @var View $this
@@ -16,16 +16,18 @@ use yii\web\JqueryAsset;
  * @var string $date
  */
 
-$this->registerCssFile('@web/css/choices.min.css');
-$this->registerJsFile('@web/js/choices.min.js', ['depends' => [JqueryAsset::class]]);
+$this->registerJsFile('@web/js/interaction-form.js', ['depends' => [ChoicesAsset::class]]);
 
-$this->registerJs("
-    var element = document.getElementById('vacancy-id');
-    var choices = new Choices(element, {
-        searchEnabled: true,
-        removeItemButton: true,
-    });
-");
+$additions = [
+    ' отправил резюме ',
+    ' в  work.ua ',
+    ' в robota.ua ',
+    ' в jobs.dou.ua ',
+    ' в linkedin ',
+    ' и на email ',
+    ' и на telegram ',
+    ' и в вайбер ',
+];
 ?>
 
 <div class="interaction-form">
@@ -44,8 +46,8 @@ $this->registerJs("
             'multiple' => true,
             'class' => 'form-select',
             'value' => Yii::$app->request->isPost
-                ? $model->person_ids
-                : (empty($model->person_ids) ? $model->getPersons()->select('id')->column() : $model->person_ids),
+                ? $model->person_ids // если из поста пришли, вставляем и пустой массив
+                : ($model->person_ids ?: ArrayHelper::getColumn($model->persons, 'id')),
         ])->label('Люди') ?>
 
         <?= $form->field($model, 'date', ['options' => ['style' => 'flex:2']])->textInput([
@@ -55,30 +57,23 @@ $this->registerJs("
         ]) ?>
     </div>
 
-    <?php
-    $js = <<<JS
-        $(document).ready(function() {
-            const element = $('#person-ids')[0];
-            const choices = new Choices(element, {
-                removeItemButton: true,
-                placeholderValue: 'Выберите людей',
-                searchPlaceholderValue: 'Поиск...',
-                noResultsText: 'Нет результатов',
-                noChoicesText: 'Нет доступных людей',
-            });
-        });
-    JS;
-    $this->registerJs($js);
-    ?>
-
     <?= $form->field($model, 'text')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'result')->textarea(['rows' => 3]) ?>
+    <div style="display:flex;gap:1rem; padding-bottom: 16px;">
+        <?= $form->field($model, 'result', ['options' => ['style' => 'flex:7']])->textarea(['rows' => 3]) ?>
+
+        <div style="flex:5; padding-top:32px;">
+            <?php foreach ($additions as $addition) { ?>
+            <button type="button" class="btn btn-outline-primary btn-sm insert-template" style="margin: 0 3px 5px 0;" data-text="<?= $addition ?>">
+                <?= $addition ?>
+            </button>
+            <?php } ?>
+        </div>
+    </div>
 
     <div class="form-group">
         <?= Html::submitButton('Сохранить', ['class' => 'btn btn-secondary w-100 btn-lg']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
-
 </div>

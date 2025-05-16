@@ -25,15 +25,26 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a(Icon::svg('plus'), ['create'], ['class' => 'float-end fs-1']) ?>
-    </p>
-
     <?php Pjax::begin(); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'pager' => [
+            'maxButtonCount' => 5,
+            'options' => ['class' => 'pagination justify-content-center'],
+            'linkContainerOptions' => ['class' => 'page-item'],
+            'linkOptions' => ['class' => 'page-link'],
+            'disabledListItemSubTagOptions' => ['class' => 'page-link'],
+            'class' => 'yii\widgets\LinkPager',
+        ],
+        'layout' => '<div class="d-flex justify-content-between align-items-center mb-3">
+                <div>{summary}</div>
+                <div>{pager}</div>   
+                <div>' . Html::a(Icon::svg('plus'), ['create'], ['class' => 'float-end fs-1']) . '</div>
+            </div>
+            {items}
+            <div class="d-flex justify-content-center mt-3">{pager}</div>',
         'columns' => [
             //['class' => 'yii\grid\SerialColumn'],
             [
@@ -45,13 +56,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     if ($model->position) {
                         $html .= ' - ' . Html::encode($model->position);
                     }
-                    if (!empty($model->contacts)) {
-                        $html .= '<ul class="list-unstyled mb-0">';
-                        foreach ($model->contacts as $type => $value) {
-                            $html .= '<li><strong>' . Html::encode($type) . ':</strong> ' . Html::encode($value) . '</li>';
-                        }
-                        $html .= '</ul>';
-                    }
+                    $html .= Html::contactsList($model);
                     return $html;
                 },
             ],

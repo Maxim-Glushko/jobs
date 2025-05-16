@@ -14,7 +14,6 @@ use yii\helpers\ArrayHelper;
 $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Сотрудники', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-\yii\web\YiiAsset::register($this);
 ?>
 
 <div class="person-view">
@@ -41,15 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'contacts',
                 'format' => 'raw',
                 'value' => function($model) {
-                    if (empty($model->contacts)) {
-                        return '';
-                    }
-                    $html = '<ul class="list-unstyled mb-0">';
-                    foreach ($model->contacts as $type => $value) {
-                        $html .= '<li><strong>' . Html::encode($type) . ':</strong> ' . Html::encode($value) . '</li>';
-                    }
-                    $html .= '</ul>';
-                    return $html;
+                    return Html::contactsList($model);
                 },
             ],
             [

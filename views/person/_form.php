@@ -1,17 +1,16 @@
 <?php
 use yii\bootstrap5\ActiveForm;
 use yii\bootstrap5\Html;
-use yii\helpers\Json;
 use app\models\Person;
 use app\models\Company;
-use yii\web\JqueryAsset;
+use app\assets\ChoicesAsset;
+use yii\helpers\ArrayHelper;
 
 /**
  * @var Person $model
  */
 
-$this->registerCssFile('@web/css/choices.min.css');
-$this->registerJsFile('@web/js/choices.min.js', ['depends' => [JqueryAsset::class]]);
+$this->registerJsFile('@web/js/person-form.js', ['depends' => [ChoicesAsset::class]]);
 ?>
 
 <div class="person-form">
@@ -35,33 +34,17 @@ $this->registerJsFile('@web/js/choices.min.js', ['depends' => [JqueryAsset::clas
             'class' => 'form-select',
             'value' => Yii::$app->request->isPost
                 ? $model->company_ids
-                : (empty($model->company_ids) ? $model->getCompanies()->select('id')->column() : $model->company_ids)
+                : ($model->company_ids ?: ArrayHelper::getColumn($model->companies, 'id'))
         ]) ?>
     </div>
 
-    <div style="display:flex; gap:1rem;">
-        <?= $this->render('@app/views/shared/_contactsField', ['form' => $form, 'model' => $model]) ?>
+    <div style="display:flex; gap:1rem;padding:16px 0;">
+        <?= $form->field($model, 'comment', ['options' => ['style' => 'flex:3']])->textarea(['rows' => 6]) ?>
 
-        <?= $form->field($model, 'comment', ['options' => ['style' => 'flex:1']])->textarea([
-            'rows' => 6
-        ]) ?>
+        <div style="flex:2; padding-top:31px;">
+            <?= $this->render('@app/views/shared/_contactsField', ['form' => $form, 'model' => $model]) ?>
+        </div>
     </div>
-
-    <?php
-    $js = <<<JS
-        $(document).ready(function() {
-            const element = $('#company-ids')[0];
-            const choices = new Choices(element, {
-                removeItemButton: true,
-                placeholderValue: 'Выберите компании',
-                searchPlaceholderValue: 'Поиск...',
-                noResultsText: 'Нет результатов',
-                noChoicesText: 'Нет доступных компаний',
-            });
-        });
-    JS;
-    $this->registerJs($js);
-    ?>
 
     <?= Html::submitButton('Сохранить', ['class' => 'btn btn-secondary w-100 btn-lg']) ?>
 
