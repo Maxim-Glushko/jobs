@@ -15,8 +15,8 @@ use yii\helpers\ArrayHelper;
  */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Компании', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+//$this->params['breadcrumbs'][] = ['label' => 'Компании', 'url' => ['index']];
+//$this->params['breadcrumbs'][] = $this->title;
 YiiAsset::register($this);
 ?>
 <div class="company-view">

@@ -12,8 +12,8 @@ use yii\helpers\Url;
  */
 
 $this->title = '#' . $model->id . ' - ' . Yii::$app->formatter->asDate($model->date, 'php:d M Y');
-$this->params['breadcrumbs'][] = ['label' => 'Общение', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+//$this->params['breadcrumbs'][] = ['label' => 'Общение', 'url' => ['index']];
+//$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="interaction-view">
 

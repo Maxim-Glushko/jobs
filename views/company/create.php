@@ -10,8 +10,8 @@ use app\models\Company;
  */
 
 $this->title = 'Добавить компанию';
-$this->params['breadcrumbs'][] = ['label' => 'Компании', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+//$this->params['breadcrumbs'][] = ['label' => 'Компании', 'url' => ['index']];
+//$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="company-create">
 

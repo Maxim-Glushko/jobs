@@ -18,7 +18,7 @@ use yii\helpers\ArrayHelper;
  */
 
 $this->title = 'Компании';
-$this->params['breadcrumbs'][] = $this->title;
+//$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="company-index">
 
@@ -35,6 +35,14 @@ $this->params['breadcrumbs'][] = $this->title;
             'disabledListItemSubTagOptions' => ['class' => 'page-link'],
             'class' => 'yii\widgets\LinkPager',
         ],
+        'rowOptions' => function ($model, $key, $index, $grid) {
+            switch ($model->status) {
+                case 3:
+                case 4: return ['class' => 'rejected-row'];
+                case 5: return ['class' => 'worked-row'];
+                default: return [];
+            }
+        },
         'layout' => '<div class="d-flex justify-content-between align-items-center mb-3">
                 <div>{summary}</div>
                 <div>{pager}</div>   
@@ -50,7 +58,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Статус',
                 'format' => 'raw',
                 'value' => function ($model) {
-                    return Company::$statuses[$model->status];
+                    $html = Company::$statuses[$model->status];
+                    if (!empty($model->vacancies)) {
+                        foreach ($model->vacancies as $vacancy) {
+                            if ($vacancy->interview_date) {
+                                $html .= '<br /><br />' . str_replace(' ', '<br />', Yii::$app->formatter->asDate($vacancy->interview_date, 'php:d M'));
+                            }
+                        }
+                    }
+                    return $html;
                 },
                 'filter' => Html::dropDownList('CompanySearch[status]', $searchModel->status, Company::$statuses, ['class' => 'form-select', 'encode' => false]),
                 'contentOptions' => ['style' => 'text-align: center;'],
@@ -70,7 +86,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function ($model) {
                     $html = Html::createVacancyLink($model->id);
                     if ($model->vacancies) {
-                        foreach ($model->vacancies as $vacancy) {
+                        $vacancies = $model->vacancies;
+                        usort($vacancies, [Html::class, 'vacanciesSort']);
+
+                        foreach ($vacancies as $vacancy) {
                             $html .= Html::vacancyLink($vacancy) .'<br />';
                         }
                     }
@@ -91,6 +110,40 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             [
+                'label' => 'Общение',
+                'format' => 'raw',
+                'attribute' => 'latestInteractionDate',
+                'value' => function ($model) {
+                    $person_ids = $model->persons ? array_column($model->persons, 'id') : [];
+                    $html = '';
+
+                    if ($model->vacancies) {
+                        $vacancies = $model->vacancies;
+                        usort($vacancies, [Html::class, 'vacanciesSort']);
+
+                        foreach ($vacancies as $vacancy) {
+                            $html .= Html::createInteractionLink($vacancy->id, $person_ids);
+                            if ($vacancy->interactions) {
+                                $interactions = $vacancy->interactions;
+                                ArrayHelper::multisort($interactions, ['date', 'created_at'], [SORT_DESC, SORT_DESC]);
+                                foreach ($interactions as $interaction) {
+                                    $html .= '<a href="' . Url::toRoute(['/interaction/view', 'id' => $interaction->id]) . '">'
+                                        . Yii::$app->formatter->asDate($interaction->date, 'php:d M Y')
+                                        . '</a>';
+                                    if ($interaction->result) {
+                                        $html .= ':<br />' . nl2br(Html::encode($interaction->result));
+                                    }
+                                    $html .= '<br />';
+                                }
+                            }
+                        }
+                    } else {
+                        // $html .= Html::createInteractionLink(0, $person_ids);
+                    }
+                    return $html;
+                }
+            ],
+            /*[
                 'label' => 'Общение',
                 'format' => 'raw',
                 'attribute' => 'latestInteractionDate',
@@ -119,7 +172,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                     return $html;
                 }
-            ],
+            ],*/
             'comment:ntext',
             //'created_at:datetime',
             //'updated_at:datetime',

@@ -130,7 +130,7 @@ class Interaction extends ActiveRecord
         foreach ($toRemove as $personId) {
             $person = Person::findOne($personId);
             if ($person) {
-                $this->unlink('companies', $person, true);
+                $this->unlink('persons', $person, true);
             }
         }
     }

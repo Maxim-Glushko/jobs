@@ -7,9 +7,9 @@ use app\models\Vacancy;
  */
 
 $this->title = 'Изменение данных: ' . $model->title;
-$this->params['breadcrumbs'][] = ['label' => 'Вакансии', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->title, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Изменение';
+//$this->params['breadcrumbs'][] = ['label' => 'Вакансии', 'url' => ['index']];
+//$this->params['breadcrumbs'][] = ['label' => $model->title, 'url' => ['view', 'id' => $model->id]];
+//$this->params['breadcrumbs'][] = 'Изменение';
 ?>
 <div class="vacancy-update">
     <h1><?= Html::encode($this->title) ?></h1>

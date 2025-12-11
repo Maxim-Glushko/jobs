@@ -17,13 +17,19 @@ $this->registerJsFile('@web/js/vacancy-form.js', ['depends' => [ChoicesAsset::cl
     <?php $form = ActiveForm::begin(); ?>
 
     <div style="display:flex;gap:1rem">
-        <?= $form->field($model, 'title', ['options' => ['style' => 'flex:1']])
+        <?= $form->field($model, 'title', ['options' => ['style' => 'flex:3']])
             ->textInput(['maxlength' => true, 'class' => 'form-control form-control-lg']) ?>
 
-        <?= $form->field($model, 'company_id', ['options' => ['style' => 'flex:1']])->dropDownList(Company::forSelect(), [
+        <?= $form->field($model, 'company_id', ['options' => ['style' => 'flex:3']])->dropDownList(Company::forSelect(), [
             'prompt' => 'Выберите компанию',
             'class' => 'form-select',
             'id' => 'company-id',
+        ]) ?>
+
+        <?= $form->field($model, 'interview_date', ['options' => ['style' => 'flex:1']])->textInput([
+            'type' => 'date',
+            'value' => ($model->isNewRecord && empty($model->interview_date)) ? '' : $model->interview_date,
+            'class' => 'form-control form-control-lg'
         ]) ?>
     </div>
 

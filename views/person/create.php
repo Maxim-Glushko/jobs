@@ -7,8 +7,8 @@ use app\models\Person;
  */
 
 $this->title = 'Добавление сотрудника';
-$this->params['breadcrumbs'][] = ['label' => 'Сотрудники', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+//$this->params['breadcrumbs'][] = ['label' => 'Сотрудники', 'url' => ['index']];
+//$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="person-create">
     <h1><?= Html::encode($this->title) ?></h1>

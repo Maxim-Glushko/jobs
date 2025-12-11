@@ -12,8 +12,8 @@ use app\models\Vacancy;
  */
 
 $this->title = 'Добавить взаимодействие';
-$this->params['breadcrumbs'][] = ['label' => 'Общение', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+//$this->params['breadcrumbs'][] = ['label' => 'Общение', 'url' => ['index']];
+//$this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="interaction-create">

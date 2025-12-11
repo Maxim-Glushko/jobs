@@ -21,6 +21,7 @@ use yii\db\ActiveQuery;
  * @property string|null $text
  * @property array|null $contacts
  * @property string|null $comment
+ * @property string $interview_date
  * @property string $created_at
  * @property string $updated_at
  *
@@ -79,6 +80,7 @@ class Vacancy extends ActiveRecord
             [['title', 'text', 'comment', 'company_name'], 'trim'],
             [['company_id'], 'integer'],
             ['contacts', 'validateJson'],
+            [['interview_date'], 'date', 'format' => 'php:Y-m-d'],
             [['created_at', 'updated_at'], 'safe'],
             [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => Company::class, 'targetAttribute' => ['company_id' => 'id']],
         ];
@@ -96,6 +98,7 @@ class Vacancy extends ActiveRecord
             'text' => 'Описание',
             'contacts' => 'Контакты',
             'comment' => 'Комментарий',
+            'interview_date' => 'Собес.',
             'created_at' => 'Дата создания',
             'updated_at' => 'Дата обновления',
         ];

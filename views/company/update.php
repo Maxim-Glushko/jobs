@@ -10,9 +10,9 @@ use app\models\Company;
  */
 
 $this->title = 'Редактирование компании: ' . $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Компании', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Редактирование';
+//$this->params['breadcrumbs'][] = ['label' => 'Компании', 'url' => ['index']];
+//$this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
+//$this->params['breadcrumbs'][] = 'Редактирование';
 ?>
 <div class="company-update">
 

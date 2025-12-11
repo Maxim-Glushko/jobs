@@ -97,7 +97,16 @@ svg.icon {
 svg.icon path {
     fill: currentColor;
 }
+/* добавить сюда код самих svg */
 
 .contact-label {
     width: 5.5rem;
 }
+
+tr.worked-row td {
+    /*background-image: repeating-linear-gradient(-45deg, #f8f8f8, #f8f8f8 20px, #ffffff 20px, #ffffff 40px);*/
+    background: #f8f8f8;
+}
+/*tr.rejected-row td {
+    background-image: repeating-linear-gradient(50deg, #fff0f0, #fff0f0, #ffffff 20px, #ffffff 40px);
+}*/

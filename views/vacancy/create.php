@@ -10,8 +10,8 @@ use app\models\Vacancy;
  */
 
 $this->title = 'Добавить вакансию';
-$this->params['breadcrumbs'][] = ['label' => 'Вакансии', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+//$this->params['breadcrumbs'][] = ['label' => 'Вакансии', 'url' => ['index']];
+//$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="vacancy-create">
 

@@ -19,7 +19,7 @@ use yii\helpers\Url;
  */
 
 $this->title = 'Люди';
-$this->params['breadcrumbs'][] = $this->title;
+//$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="person-index">
 

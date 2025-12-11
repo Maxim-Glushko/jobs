@@ -18,7 +18,7 @@ use yii\web\JqueryAsset;
  */
 
 $this->title = 'Вакансии';
-$this->params['breadcrumbs'][] = $this->title;
+//$this->params['breadcrumbs'][] = $this->title;
 
 $this->registerJsFile('@web/js/vacancy-index.js', ['depends' => [JqueryAsset::class]]);
 ?>

@@ -7,6 +7,7 @@ use yii\db\ActiveRecord;
 use yii\helpers\Url;
 use app\models\Vacancy;
 use app\models\Person;
+use yii\helpers\ArrayHelper;
 
 
 class Html extends \yii\bootstrap5\Html
@@ -74,5 +75,18 @@ class Html extends \yii\bootstrap5\Html
             $html .= '</ul>';
         }
         return $html;
+    }
+
+    public static function vacanciesSort(Vacancy $a, Vacancy $b): int
+    {
+        $maxDateA = $a->interactions
+            ? max(ArrayHelper::getColumn($a->interactions, 'date'))
+            : null;
+        $maxDateB = $b->interactions
+            ? max(ArrayHelper::getColumn($b->interactions, 'date'))
+            : null;
+        $timeA = $maxDateA ? strtotime($maxDateA) : 0;
+        $timeB = $maxDateB ? strtotime($maxDateB) : 0;
+        return $timeB <=> $timeA;
     }
 }

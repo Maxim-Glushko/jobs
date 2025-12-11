@@ -41,6 +41,10 @@ class CompanySearch extends Model
                     'latestInteractionDate' => [
                         'asc' => new Expression('MAX(interactions.date) ASC, MAX(interactions.created_at) ASC'),
                         'desc' => new Expression('MAX(interactions.date) DESC, MAX(interactions.created_at) DESC')
+                    ],
+                    'status' => [ // на самом деле сортировка по дате, просто хочу в той же колонке
+                        'asc' => new Expression('MAX(vacancies.interview_date) ASC, MAX(interactions.date) ASC'),
+                        'desc' => new Expression('MAX(vacancies.interview_date) DESC, MAX(interactions.date) DESC')
                     ]
                 ]
             ],

@@ -13,10 +13,8 @@ use app\models\Interaction;
  * Update page title with interaction ID
  */
 $this->title = 'Update Interaction: #' . $model->id;
-
-
-$this->params['breadcrumbs'][] = ['label' => 'Общение', 'url' => ['index']];
-$this->params['breadcrumbs'][] = 'Update';
+//$this->params['breadcrumbs'][] = ['label' => 'Общение', 'url' => ['index']];
+//$this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="interaction-update">
 

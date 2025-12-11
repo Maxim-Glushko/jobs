@@ -17,7 +17,7 @@ use yii\helpers\Url;
  */
 
 $this->title = 'Общение';
-$this->params['breadcrumbs'][] = $this->title;
+//$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="interaction-index">
 
